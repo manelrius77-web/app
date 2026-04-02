@@ -322,23 +322,18 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
             <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
               Cantidad (€)
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] font-black text-lg pointer-events-none z-10">
-                €
-              </span>
-              <input
-                type="number"
-                step="0.01"
-                min="0.01"
-                max={type === 'withdrawal' ? maxAmount : undefined}
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="neo-input pl-11 text-lg font-bold"
-                placeholder="0.00"
-                required
-                data-testid="transaction-amount-input"
-              />
-            </div>
+            <input
+              type="number"
+              step="0.01"
+              min="0.01"
+              max={type === 'withdrawal' ? maxAmount : undefined}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="neo-input text-lg font-bold"
+              placeholder="0.00"
+              required
+              data-testid="transaction-amount-input"
+            />
             {type === 'withdrawal' && maxAmount !== undefined && (
               <p className="text-xs text-[#1A1A1A] mt-1 font-medium">
                 Saldo disponible: €{maxAmount.toFixed(2)}

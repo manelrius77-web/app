@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { PiggyBank, Envelope, Lock, User } from '@phosphor-icons/react';
+import { PiggyBank } from '@phosphor-icons/react';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -79,22 +79,15 @@ const AuthPage = () => {
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
                     Nombre
                   </label>
-                  <div className="relative">
-                    <User
-                      size={20}
-                      weight="bold"
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] pointer-events-none z-10"
-                    />
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="neo-input pl-12"
-                      placeholder="Tu nombre"
-                      required={!isLogin}
-                      data-testid="name-input"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="neo-input"
+                    placeholder="Tu nombre"
+                    required={!isLogin}
+                    data-testid="name-input"
+                  />
                 </div>
               )}
 
@@ -102,44 +95,30 @@ const AuthPage = () => {
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
                   Email
                 </label>
-                <div className="relative">
-                  <Envelope
-                    size={20}
-                    weight="bold"
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] pointer-events-none z-10"
-                  />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="neo-input pl-12"
-                    placeholder="tu@email.com"
-                    required
-                    data-testid="email-input"
-                  />
-                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="neo-input"
+                  placeholder="tu@email.com"
+                  required
+                  data-testid="email-input"
+                />
               </div>
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
                   Contraseña
                 </label>
-                <div className="relative">
-                  <Lock
-                    size={20}
-                    weight="bold"
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] pointer-events-none z-10"
-                  />
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="neo-input pl-12"
-                    placeholder="••••••••"
-                    required
-                    data-testid="password-input"
-                  />
-                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="neo-input"
+                  placeholder="••••••••"
+                  required
+                  data-testid="password-input"
+                />
               </div>
 
               {error && (

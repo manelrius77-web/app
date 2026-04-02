@@ -104,23 +104,18 @@ const CreatePiggyBankDialog = ({ onClose, onSuccess }) => {
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
-              Meta de Ahorro (Opcional)
+              Meta de Ahorro (Opcional) - €
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] font-bold pointer-events-none z-10">
-                €
-              </span>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                value={goal}
-                onChange={(e) => setGoal(e.target.value)}
-                className="neo-input pl-10"
-                placeholder="0.00"
-                data-testid="goal-input"
-              />
-            </div>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              className="neo-input"
+              placeholder="0.00"
+              data-testid="goal-input"
+            />
           </div>
 
           <div className="flex space-x-3">
