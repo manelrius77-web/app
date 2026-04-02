@@ -264,14 +264,90 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
+  const [inputMode, setInputMode] = useState('total'); // 'total' o 'coins'
+  
+  // Monedas y billetes
+  const [coins, setCoins] = useState({
+    c1: 0,    // 1 céntimo
+    c2: 0,    // 2 céntimos
+    c5: 0,    // 5 céntimos
+    c10: 0,   // 10 céntimos
+    c20: 0,   // 20 céntimos
+    c50: 0,   // 50 céntimos
+    e1: 0,    // 1 euro
+    e2: 0,    // 2 euros
+    e5: 0,    // 5 euros
+    e10: 0,   // 10 euros
+    e20: 0,   // 20 euros
+    e50: 0,   // 50 euros
+    e100: 0,  // 100 euros
+    e200: 0,  // 200 euros
+    e500: 0,  // 500 euros
+  });
+
+  const coinValues = {
+    c1: 0.01,
+    c2: 0.02,
+    c5: 0.05,
+    c10: 0.10,
+    c20: 0.20,
+    c50: 0.50,
+    e1: 1.00,
+    e2: 2.00,
+    e5: 5.00,
+    e10: 10.00,
+    e20: 20.00,
+    e50: 50.00,
+    e100: 100.00,
+    e200: 200.00,
+    e500: 500.00,
+  };
+
+  const coinLabels = {
+    c1: '1c',
+    c2: '2c',
+    c5: '5c',
+    c10: '10c',
+    c20: '20c',
+    c50: '50c',
+    e1: '1€',
+    e2: '2€',
+    e5: '5€',
+    e10: '10€',
+    e20: '20€',
+    e50: '50€',
+    e100: '100€',
+    e200: '200€',
+    e500: '500€',
+  };
+
+  const calculateTotal = () => {
+    return Object.keys(coins).reduce((total, key) => {
+      return total + (coins[key] * coinValues[key]);
+    }, 0);
+  };
+
+  const handleCoinChange = (key, value) => {
+    const numValue = parseInt(value) || 0;
+    setCoins(prev => ({ ...prev, [key]: Math.max(0, numValue) }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const amountValue = parseFloat(amount);
-
-    if (isNaN(amountValue) || amountValue <= 0) {
-      toast.error('Por favor, introduce una cantidad válida');
-      return;
+    
+    let amountValue;
+    if (inputMode === 'total') {
+      amountValue = parseFloat(amount);
+      if (isNaN(amountValue) || amountValue <= 0) {
+        toast.error('Por favor, introduce una cantidad válida');
+        return;
+      }
+    } else {
+      amountValue = calculateTotal();
+      if (amountValue <= 0) {
+        toast.error('Por favor, introduce al menos una moneda o billete');
+        return;
+      }
     }
 
     if (type === 'withdrawal' && amountValue > maxAmount) {
@@ -281,13 +357,23 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
 
     setLoading(true);
     try {
+      const coinDetails = inputMode === 'coins' ? 
+        Object.keys(coins)
+          .filter(key => coins[key] > 0)
+          .map(key => `${coins[key]}x ${coinLabels[key]}`)
+          .join(', ') : null;
+      
+      const finalDescription = coinDetails 
+        ? (description.trim() ? `${description.trim()} (${coinDetails})` : coinDetails)
+        : (description.trim() || null);
+
       await axios.post(
         `${API}/transactions`,
         {
           piggy_bank_id: piggyBankId,
           type,
           amount: amountValue,
-          description: description.trim() || null,
+          description: finalDescription,
         },
         { withCredentials: true }
       );
@@ -318,28 +404,126 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
-              Cantidad (€)
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              min="0.01"
-              max={type === 'withdrawal' ? maxAmount : undefined}
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="neo-input text-lg font-bold"
-              placeholder="0.00"
-              required
-              data-testid="transaction-amount-input"
-            />
-            {type === 'withdrawal' && maxAmount !== undefined && (
-              <p className="text-xs text-[#1A1A1A] mt-1 font-medium">
-                Saldo disponible: €{maxAmount.toFixed(2)}
-              </p>
-            )}
-          </div>
+          {/* Toggle entre modos */}
+          {type === 'deposit' && (
+            <div className="flex space-x-2 p-1 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-xl">
+              <button
+                type="button"
+                onClick={() => setInputMode('total')}
+                className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm uppercase transition-all ${
+                  inputMode === 'total'
+                    ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
+                    : 'bg-transparent text-[#1A1A1A]'
+                }`}
+                data-testid="mode-total-button"
+              >
+                Cantidad Total
+              </button>
+              <button
+                type="button"
+                onClick={() => setInputMode('coins')}
+                className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm uppercase transition-all ${
+                  inputMode === 'coins'
+                    ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
+                    : 'bg-transparent text-[#1A1A1A]'
+                }`}
+                data-testid="mode-coins-button"
+              >
+                Monedas/Billetes
+              </button>
+            </div>
+          )}
+
+          {/* Input de cantidad total */}
+          {inputMode === 'total' && (
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
+                Cantidad (€)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0.01"
+                max={type === 'withdrawal' ? maxAmount : undefined}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="neo-input text-lg font-bold"
+                placeholder="0.00"
+                required
+                data-testid="transaction-amount-input"
+              />
+              {type === 'withdrawal' && maxAmount !== undefined && (
+                <p className="text-xs text-[#1A1A1A] mt-1 font-medium">
+                  Saldo disponible: €{maxAmount.toFixed(2)}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Input de monedas y billetes */}
+          {inputMode === 'coins' && (
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">
+                  Monedas y Billetes
+                </label>
+                <div className="text-right">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">Total</p>
+                  <p className="text-xl font-black text-[#1A1A1A]" data-testid="coins-total">
+                    €{calculateTotal().toFixed(2)}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="max-h-64 overflow-y-auto space-y-3 p-3 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-xl">
+                {/* Monedas */}
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Monedas</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {['c1', 'c2', 'c5', 'c10', 'c20', 'c50', 'e1', 'e2'].map((key) => (
+                      <div key={key} className="flex flex-col">
+                        <label className="text-xs font-medium text-[#1A1A1A] mb-1 text-center">
+                          {coinLabels[key]}
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={coins[key]}
+                          onChange={(e) => handleCoinChange(key, e.target.value)}
+                          className="neo-input text-center text-sm py-1"
+                          placeholder="0"
+                          data-testid={`coin-${key}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Billetes */}
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Billetes</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {['e5', 'e10', 'e20', 'e50', 'e100', 'e200', 'e500'].map((key) => (
+                      <div key={key} className="flex flex-col">
+                        <label className="text-xs font-medium text-[#1A1A1A] mb-1 text-center">
+                          {coinLabels[key]}
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={coins[key]}
+                          onChange={(e) => handleCoinChange(key, e.target.value)}
+                          className="neo-input text-center text-sm py-1"
+                          placeholder="0"
+                          data-testid={`bill-${key}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
