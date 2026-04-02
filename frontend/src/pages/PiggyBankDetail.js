@@ -389,7 +389,7 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
 
   return (
     <div className="fixed inset-0 bg-[#1A1A1A] bg-opacity-50 flex items-center justify-center z-50 p-4" data-testid="transaction-dialog">
-      <div className="bg-white border-4 border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] rounded-xl p-6 w-full max-w-md">
+      <div className={`bg-white border-4 border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] rounded-xl p-6 w-full ${inputMode === 'coins' ? 'max-w-2xl' : 'max-w-md'}`}>
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-black uppercase tracking-tighter text-[#1A1A1A]">
             {type === 'deposit' ? 'Añadir Dinero' : 'Retirar Dinero'}
@@ -463,60 +463,90 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
           {/* Input de monedas y billetes */}
           {inputMode === 'coins' && (
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">
-                  Monedas y Billetes
+              <div className="flex justify-between items-center mb-4">
+                <label className="block text-sm font-bold uppercase tracking-wider text-[#1A1A1A]">
+                  Selecciona cantidad
                 </label>
-                <div className="text-right">
+                <div className="text-right bg-[#A8E6CF] px-4 py-2 border-2 border-[#1A1A1A] rounded-lg shadow-[2px_2px_0px_#1A1A1A]">
                   <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">Total</p>
-                  <p className="text-xl font-black text-[#1A1A1A]" data-testid="coins-total">
+                  <p className="text-2xl font-black text-[#1A1A1A]" data-testid="coins-total">
                     €{calculateTotal().toFixed(2)}
                   </p>
                 </div>
               </div>
               
-              <div className="max-h-64 overflow-y-auto space-y-3 p-3 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-xl">
+              <div className="space-y-4">
                 {/* Monedas */}
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Monedas</p>
-                  <div className="grid grid-cols-4 gap-2">
+                <div className="bg-[#FDFBF7] p-4 border-2 border-[#1A1A1A] rounded-xl">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-3">Monedas</p>
+                  <div className="grid grid-cols-8 gap-2">
                     {['c1', 'c2', 'c5', 'c10', 'c20', 'c50', 'e1', 'e2'].map((key) => (
-                      <div key={key} className="flex flex-col">
-                        <label className="text-xs font-medium text-[#1A1A1A] mb-1 text-center">
+                      <div key={key} className="flex flex-col items-center">
+                        <label className="text-xs font-bold text-[#1A1A1A] mb-1">
                           {coinLabels[key]}
                         </label>
-                        <input
-                          type="number"
-                          min="0"
-                          value={coins[key]}
-                          onChange={(e) => handleCoinChange(key, e.target.value)}
-                          className="neo-input text-center text-sm py-1"
-                          placeholder="0"
-                          data-testid={`coin-${key}`}
-                        />
+                        <div className="flex flex-col space-y-1">
+                          <button
+                            type="button"
+                            onClick={() => handleCoinChange(key, coins[key] + 1)}
+                            className="w-10 h-7 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                          >
+                            +
+                          </button>
+                          <input
+                            type="number"
+                            min="0"
+                            value={coins[key]}
+                            onChange={(e) => handleCoinChange(key, e.target.value)}
+                            className="w-10 h-7 text-center text-sm font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
+                            data-testid={`coin-${key}`}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleCoinChange(key, coins[key] - 1)}
+                            className="w-10 h-7 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                          >
+                            −
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Billetes */}
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Billetes</p>
-                  <div className="grid grid-cols-4 gap-2">
+                <div className="bg-[#FDFBF7] p-4 border-2 border-[#1A1A1A] rounded-xl">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-3">Billetes</p>
+                  <div className="grid grid-cols-7 gap-2">
                     {['e5', 'e10', 'e20', 'e50', 'e100', 'e200', 'e500'].map((key) => (
-                      <div key={key} className="flex flex-col">
-                        <label className="text-xs font-medium text-[#1A1A1A] mb-1 text-center">
+                      <div key={key} className="flex flex-col items-center">
+                        <label className="text-xs font-bold text-[#1A1A1A] mb-1">
                           {coinLabels[key]}
                         </label>
-                        <input
-                          type="number"
-                          min="0"
-                          value={coins[key]}
-                          onChange={(e) => handleCoinChange(key, e.target.value)}
-                          className="neo-input text-center text-sm py-1"
-                          placeholder="0"
-                          data-testid={`bill-${key}`}
-                        />
+                        <div className="flex flex-col space-y-1">
+                          <button
+                            type="button"
+                            onClick={() => handleCoinChange(key, coins[key] + 1)}
+                            className="w-12 h-7 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                          >
+                            +
+                          </button>
+                          <input
+                            type="number"
+                            min="0"
+                            value={coins[key]}
+                            onChange={(e) => handleCoinChange(key, e.target.value)}
+                            className="w-12 h-7 text-center text-sm font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
+                            data-testid={`bill-${key}`}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleCoinChange(key, coins[key] - 1)}
+                            className="w-12 h-7 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                          >
+                            −
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
