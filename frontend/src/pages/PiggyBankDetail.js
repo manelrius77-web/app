@@ -323,7 +323,7 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
               Cantidad (€)
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] font-black text-lg">
+              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] font-black text-lg pointer-events-none z-10">
                 €
               </span>
               <input
@@ -333,7 +333,7 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
                 max={type === 'withdrawal' ? maxAmount : undefined}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="neo-input pl-9 text-lg font-bold"
+                className="neo-input pl-11 text-lg font-bold"
                 placeholder="0.00"
                 required
                 data-testid="transaction-amount-input"

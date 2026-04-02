@@ -83,13 +83,13 @@ const AuthPage = () => {
                     <User
                       size={20}
                       weight="bold"
-                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#1A1A1A]"
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] pointer-events-none z-10"
                     />
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="neo-input pl-11"
+                      className="neo-input pl-12"
                       placeholder="Tu nombre"
                       required={!isLogin}
                       data-testid="name-input"
@@ -106,13 +106,13 @@ const AuthPage = () => {
                   <Envelope
                     size={20}
                     weight="bold"
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#1A1A1A]"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] pointer-events-none z-10"
                   />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="neo-input pl-11"
+                    className="neo-input pl-12"
                     placeholder="tu@email.com"
                     required
                     data-testid="email-input"
@@ -128,13 +128,13 @@ const AuthPage = () => {
                   <Lock
                     size={20}
                     weight="bold"
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#1A1A1A]"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#1A1A1A] pointer-events-none z-10"
                   />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="neo-input pl-11"
+                    className="neo-input pl-12"
                     placeholder="••••••••"
                     required
                     data-testid="password-input"

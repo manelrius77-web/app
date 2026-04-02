@@ -67,6 +67,9 @@ const Dashboard = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
+              <span className="hidden md:inline text-sm font-bold text-[#1A1A1A]">
+                {user?.name || user?.email}
+              </span>
               <button
                 onClick={() => navigate('/statistics')}
                 className="neo-button flex items-center space-x-2"
