@@ -264,7 +264,9 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-  const [inputMode, setInputMode] = useState('total'); // 'total' o 'coins'
+  const [inputMode, setInputMode] = useState('total'); // 'total', 'coins', 'bills'
+  const [showCoinsModal, setShowCoinsModal] = useState(false);
+  const [showBillsModal, setShowBillsModal] = useState(false);
   
   // Monedas y billetes
   const [coins, setCoins] = useState({
@@ -388,8 +390,9 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
   };
 
   return (
-    <div className="fixed inset-0 bg-[#1A1A1A] bg-opacity-50 flex items-center justify-center z-50 p-4" data-testid="transaction-dialog">
-      <div className={`bg-white border-4 border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] rounded-xl p-6 w-full ${inputMode === 'coins' ? 'max-w-2xl' : 'max-w-md'}`}>
+    <>
+      <div className="fixed inset-0 bg-[#1A1A1A] bg-opacity-50 flex items-center justify-center z-50 p-4" data-testid="transaction-dialog">
+        <div className="bg-white border-4 border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] rounded-xl p-4 w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-black uppercase tracking-tighter text-[#1A1A1A]">
             {type === 'deposit' ? 'Añadir Dinero' : 'Retirar Dinero'}
@@ -403,36 +406,36 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          {/* Toggle entre modos */}
-          {type === 'deposit' && (
-            <div className="flex space-x-1 p-1 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-lg">
-              <button
-                type="button"
-                onClick={() => setInputMode('total')}
-                className={`flex-1 py-1.5 px-3 rounded-md font-bold text-xs uppercase transition-all ${
-                  inputMode === 'total'
-                    ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
-                    : 'bg-transparent text-[#1A1A1A]'
-                }`}
-                data-testid="mode-total-button"
-              >
-                Cantidad Total
-              </button>
-              <button
-                type="button"
-                onClick={() => setInputMode('coins')}
-                className={`flex-1 py-1.5 px-3 rounded-md font-bold text-xs uppercase transition-all ${
-                  inputMode === 'coins'
-                    ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
-                    : 'bg-transparent text-[#1A1A1A]'
-                }`}
-                data-testid="mode-coins-button"
-              >
-                Monedas/Billetes
-              </button>
-            </div>
-          )}
+          <form onSubmit={handleSubmit} className="space-y-3">
+            {/* Toggle entre modos */}
+            {type === 'deposit' && (
+              <div className="flex space-x-1 p-1 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-lg">
+                <button
+                  type="button"
+                  onClick={() => setInputMode('total')}
+                  className={`flex-1 py-1.5 px-3 rounded-md font-bold text-xs uppercase transition-all ${
+                    inputMode === 'total'
+                      ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
+                      : 'bg-transparent text-[#1A1A1A]'
+                  }`}
+                  data-testid="mode-total-button"
+                >
+                  Cantidad Total
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInputMode('coins')}
+                  className={`flex-1 py-1.5 px-3 rounded-md font-bold text-xs uppercase transition-all ${
+                    inputMode === 'coins'
+                      ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
+                      : 'bg-transparent text-[#1A1A1A]'
+                  }`}
+                  data-testid="mode-coins-button"
+                >
+                  Monedas/Billetes
+                </button>
+              </div>
+            )}
 
           {/* Input de cantidad total */}
           {inputMode === 'total' && (
@@ -460,137 +463,230 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
             </div>
           )}
 
-          {/* Input de monedas y billetes */}
-          {inputMode === 'coins' && (
-            <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">
-                  Selecciona cantidad
+            {/* Selección de monedas o billetes */}
+            {inputMode === 'coins' && (
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">
+                    Selecciona tipo
+                  </label>
+                  <div className="text-right bg-[#A8E6CF] px-3 py-1.5 border-2 border-[#1A1A1A] rounded-lg shadow-[2px_2px_0px_#1A1A1A]">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]">Total</p>
+                    <p className="text-xl font-black text-[#1A1A1A] leading-none" data-testid="coins-total">
+                      €{calculateTotal().toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowCoinsModal(true)}
+                    className="w-full neo-button flex items-center justify-between px-6 py-4"
+                    data-testid="open-coins-modal-button"
+                  >
+                    <span className="text-base">Añadir Monedas</span>
+                    <span className="text-sm">
+                      {Object.keys(coins).filter(k => ['c1', 'c2', 'c5', 'c10', 'c20', 'c50', 'e1', 'e2'].includes(k) && coins[k] > 0).length} tipos
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowBillsModal(true)}
+                    className="w-full neo-button neo-button-secondary flex items-center justify-between px-6 py-4"
+                    data-testid="open-bills-modal-button"
+                  >
+                    <span className="text-base">Añadir Billetes</span>
+                    <span className="text-sm">
+                      {Object.keys(coins).filter(k => ['e5', 'e10', 'e20', 'e50', 'e100', 'e200', 'e500'].includes(k) && coins[k] > 0).length} tipos
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Input de cantidad total */}
+            {inputMode === 'total' && (
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
+                  Cantidad (€)
                 </label>
-                <div className="text-right bg-[#A8E6CF] px-3 py-1.5 border-2 border-[#1A1A1A] rounded-lg shadow-[2px_2px_0px_#1A1A1A]">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]">Total</p>
-                  <p className="text-xl font-black text-[#1A1A1A] leading-none" data-testid="coins-total">
-                    €{calculateTotal().toFixed(2)}
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  max={type === 'withdrawal' ? maxAmount : undefined}
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="neo-input text-lg font-bold"
+                  placeholder="0.00"
+                  required
+                  data-testid="transaction-amount-input"
+                />
+                {type === 'withdrawal' && maxAmount !== undefined && (
+                  <p className="text-xs text-[#1A1A1A] mt-1 font-medium">
+                    Saldo disponible: €{maxAmount.toFixed(2)}
                   </p>
-                </div>
+                )}
               </div>
-              
-              <div className="space-y-3">
-                {/* Monedas */}
-                <div className="bg-[#FDFBF7] p-3 border-2 border-[#1A1A1A] rounded-xl">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Monedas</p>
-                  <div className="grid grid-cols-8 gap-1.5">
-                    {['c1', 'c2', 'c5', 'c10', 'c20', 'c50', 'e1', 'e2'].map((key) => (
-                      <div key={key} className="flex flex-col items-center">
-                        <label className="text-[10px] font-bold text-[#1A1A1A] mb-1">
-                          {coinLabels[key]}
-                        </label>
-                        <div className="flex flex-col space-y-0.5">
-                          <button
-                            type="button"
-                            onClick={() => handleCoinChange(key, coins[key] + 1)}
-                            className="w-9 h-6 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
-                          >
-                            +
-                          </button>
-                          <input
-                            type="number"
-                            min="0"
-                            value={coins[key]}
-                            onChange={(e) => handleCoinChange(key, e.target.value)}
-                            className="w-9 h-6 text-center text-xs font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
-                            data-testid={`coin-${key}`}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleCoinChange(key, coins[key] - 1)}
-                            className="w-9 h-6 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
-                          >
-                            −
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            )}
 
-                {/* Billetes */}
-                <div className="bg-[#FDFBF7] p-3 border-2 border-[#1A1A1A] rounded-xl">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Billetes</p>
-                  <div className="grid grid-cols-7 gap-1.5">
-                    {['e5', 'e10', 'e20', 'e50', 'e100', 'e200', 'e500'].map((key) => (
-                      <div key={key} className="flex flex-col items-center">
-                        <label className="text-[10px] font-bold text-[#1A1A1A] mb-1">
-                          {coinLabels[key]}
-                        </label>
-                        <div className="flex flex-col space-y-0.5">
-                          <button
-                            type="button"
-                            onClick={() => handleCoinChange(key, coins[key] + 1)}
-                            className="w-11 h-6 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
-                          >
-                            +
-                          </button>
-                          <input
-                            type="number"
-                            min="0"
-                            value={coins[key]}
-                            onChange={(e) => handleCoinChange(key, e.target.value)}
-                            className="w-11 h-6 text-center text-xs font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
-                            data-testid={`bill-${key}`}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleCoinChange(key, coins[key] - 1)}
-                            className="w-11 h-6 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
-                          >
-                            −
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
+                Descripción (Opcional)
+              </label>
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="neo-input"
+                placeholder="Ej: Ahorro mensual, Regalo..."
+                data-testid="transaction-description-input"
+              />
             </div>
-          )}
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
-              Descripción (Opcional)
-            </label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="neo-input"
-              placeholder="Ej: Ahorro mensual, Regalo..."
-              data-testid="transaction-description-input"
-            />
-          </div>
-
-          <div className="flex space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="neo-button neo-button-secondary flex-1"
-              disabled={loading}
-              data-testid="cancel-transaction-button"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="neo-button flex-1"
-              disabled={loading}
-              data-testid="submit-transaction-button"
-            >
-              {loading ? 'Procesando...' : 'Confirmar'}
-            </button>
-          </div>
-        </form>
+            <div className="flex space-x-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="neo-button neo-button-secondary flex-1"
+                disabled={loading}
+                data-testid="cancel-transaction-button"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="neo-button flex-1"
+                disabled={loading}
+                data-testid="submit-transaction-button"
+              >
+                {loading ? 'Procesando...' : 'Confirmar'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+
+      {/* Modal de Monedas */}
+      {showCoinsModal && (
+        <div className="fixed inset-0 bg-[#1A1A1A] bg-opacity-70 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white border-4 border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-[#1A1A1A]">
+                Añadir Monedas
+              </h3>
+              <button
+                onClick={() => setShowCoinsModal(false)}
+                className="text-[#1A1A1A] hover:bg-[#FDFBF7] p-2 rounded-lg transition-colors"
+              >
+                <X size={24} weight="bold" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-4 gap-4">
+              {['c1', 'c2', 'c5', 'c10', 'c20', 'c50', 'e1', 'e2'].map((key) => (
+                <div key={key} className="bg-[#FDFBF7] p-4 border-2 border-[#1A1A1A] rounded-xl">
+                  <label className="text-lg font-black text-[#1A1A1A] mb-3 block text-center">
+                    {coinLabels[key]}
+                  </label>
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => handleCoinChange(key, coins[key] + 1)}
+                      className="w-full h-12 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded-lg text-[#1A1A1A] font-black text-xl hover:bg-[#86D4BA] active:shadow-none shadow-[2px_2px_0px_#1A1A1A]"
+                    >
+                      +
+                    </button>
+                    <input
+                      type="number"
+                      min="0"
+                      value={coins[key]}
+                      onChange={(e) => handleCoinChange(key, e.target.value)}
+                      className="w-full h-12 text-center text-2xl font-black border-2 border-[#1A1A1A] rounded-lg bg-white focus:outline-none focus:bg-[#FDFBF7]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleCoinChange(key, coins[key] - 1)}
+                      className="w-full h-12 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded-lg text-[#1A1A1A] font-black text-xl hover:bg-[#FFC299] active:shadow-none shadow-[2px_2px_0px_#1A1A1A]"
+                    >
+                      −
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setShowCoinsModal(false)}
+              className="neo-button w-full mt-6"
+            >
+              Listo
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Billetes */}
+      {showBillsModal && (
+        <div className="fixed inset-0 bg-[#1A1A1A] bg-opacity-70 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white border-4 border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-[#1A1A1A]">
+                Añadir Billetes
+              </h3>
+              <button
+                onClick={() => setShowBillsModal(false)}
+                className="text-[#1A1A1A] hover:bg-[#FDFBF7] p-2 rounded-lg transition-colors"
+              >
+                <X size={24} weight="bold" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-4 gap-4">
+              {['e5', 'e10', 'e20', 'e50', 'e100', 'e200', 'e500'].map((key) => (
+                <div key={key} className="bg-[#FDFBF7] p-4 border-2 border-[#1A1A1A] rounded-xl">
+                  <label className="text-lg font-black text-[#1A1A1A] mb-3 block text-center">
+                    {coinLabels[key]}
+                  </label>
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => handleCoinChange(key, coins[key] + 1)}
+                      className="w-full h-12 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded-lg text-[#1A1A1A] font-black text-xl hover:bg-[#86D4BA] active:shadow-none shadow-[2px_2px_0px_#1A1A1A]"
+                    >
+                      +
+                    </button>
+                    <input
+                      type="number"
+                      min="0"
+                      value={coins[key]}
+                      onChange={(e) => handleCoinChange(key, e.target.value)}
+                      className="w-full h-12 text-center text-2xl font-black border-2 border-[#1A1A1A] rounded-lg bg-white focus:outline-none focus:bg-[#FDFBF7]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleCoinChange(key, coins[key] - 1)}
+                      className="w-full h-12 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded-lg text-[#1A1A1A] font-black text-xl hover:bg-[#FFC299] active:shadow-none shadow-[2px_2px_0px_#1A1A1A]"
+                    >
+                      −
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setShowBillsModal(false)}
+              className="neo-button w-full mt-6"
+            >
+              Listo
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
