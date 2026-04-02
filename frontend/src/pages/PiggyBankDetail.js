@@ -403,14 +403,14 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-3">
           {/* Toggle entre modos */}
           {type === 'deposit' && (
-            <div className="flex space-x-2 p-1 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-xl">
+            <div className="flex space-x-1 p-1 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-lg">
               <button
                 type="button"
                 onClick={() => setInputMode('total')}
-                className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm uppercase transition-all ${
+                className={`flex-1 py-1.5 px-3 rounded-md font-bold text-xs uppercase transition-all ${
                   inputMode === 'total'
                     ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
                     : 'bg-transparent text-[#1A1A1A]'
@@ -422,7 +422,7 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
               <button
                 type="button"
                 onClick={() => setInputMode('coins')}
-                className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm uppercase transition-all ${
+                className={`flex-1 py-1.5 px-3 rounded-md font-bold text-xs uppercase transition-all ${
                   inputMode === 'coins'
                     ? 'bg-[#A8E6CF] border-2 border-[#1A1A1A] shadow-[2px_2px_0px_#1A1A1A]'
                     : 'bg-transparent text-[#1A1A1A]'
@@ -463,33 +463,33 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
           {/* Input de monedas y billetes */}
           {inputMode === 'coins' && (
             <div>
-              <div className="flex justify-between items-center mb-4">
-                <label className="block text-sm font-bold uppercase tracking-wider text-[#1A1A1A]">
+              <div className="flex justify-between items-center mb-3">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">
                   Selecciona cantidad
                 </label>
-                <div className="text-right bg-[#A8E6CF] px-4 py-2 border-2 border-[#1A1A1A] rounded-lg shadow-[2px_2px_0px_#1A1A1A]">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">Total</p>
-                  <p className="text-2xl font-black text-[#1A1A1A]" data-testid="coins-total">
+                <div className="text-right bg-[#A8E6CF] px-3 py-1.5 border-2 border-[#1A1A1A] rounded-lg shadow-[2px_2px_0px_#1A1A1A]">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]">Total</p>
+                  <p className="text-xl font-black text-[#1A1A1A] leading-none" data-testid="coins-total">
                     €{calculateTotal().toFixed(2)}
                   </p>
                 </div>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {/* Monedas */}
-                <div className="bg-[#FDFBF7] p-4 border-2 border-[#1A1A1A] rounded-xl">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-3">Monedas</p>
-                  <div className="grid grid-cols-8 gap-2">
+                <div className="bg-[#FDFBF7] p-3 border-2 border-[#1A1A1A] rounded-xl">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Monedas</p>
+                  <div className="grid grid-cols-8 gap-1.5">
                     {['c1', 'c2', 'c5', 'c10', 'c20', 'c50', 'e1', 'e2'].map((key) => (
                       <div key={key} className="flex flex-col items-center">
-                        <label className="text-xs font-bold text-[#1A1A1A] mb-1">
+                        <label className="text-[10px] font-bold text-[#1A1A1A] mb-1">
                           {coinLabels[key]}
                         </label>
-                        <div className="flex flex-col space-y-1">
+                        <div className="flex flex-col space-y-0.5">
                           <button
                             type="button"
                             onClick={() => handleCoinChange(key, coins[key] + 1)}
-                            className="w-10 h-7 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                            className="w-9 h-6 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
                           >
                             +
                           </button>
@@ -498,13 +498,13 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
                             min="0"
                             value={coins[key]}
                             onChange={(e) => handleCoinChange(key, e.target.value)}
-                            className="w-10 h-7 text-center text-sm font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
+                            className="w-9 h-6 text-center text-xs font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
                             data-testid={`coin-${key}`}
                           />
                           <button
                             type="button"
                             onClick={() => handleCoinChange(key, coins[key] - 1)}
-                            className="w-10 h-7 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                            className="w-9 h-6 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
                           >
                             −
                           </button>
@@ -515,19 +515,19 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
                 </div>
 
                 {/* Billetes */}
-                <div className="bg-[#FDFBF7] p-4 border-2 border-[#1A1A1A] rounded-xl">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-3">Billetes</p>
-                  <div className="grid grid-cols-7 gap-2">
+                <div className="bg-[#FDFBF7] p-3 border-2 border-[#1A1A1A] rounded-xl">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">Billetes</p>
+                  <div className="grid grid-cols-7 gap-1.5">
                     {['e5', 'e10', 'e20', 'e50', 'e100', 'e200', 'e500'].map((key) => (
                       <div key={key} className="flex flex-col items-center">
-                        <label className="text-xs font-bold text-[#1A1A1A] mb-1">
+                        <label className="text-[10px] font-bold text-[#1A1A1A] mb-1">
                           {coinLabels[key]}
                         </label>
-                        <div className="flex flex-col space-y-1">
+                        <div className="flex flex-col space-y-0.5">
                           <button
                             type="button"
                             onClick={() => handleCoinChange(key, coins[key] + 1)}
-                            className="w-12 h-7 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                            className="w-11 h-6 bg-[#A8E6CF] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#86D4BA] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
                           >
                             +
                           </button>
@@ -536,13 +536,13 @@ const TransactionDialog = ({ type, piggyBankId, maxAmount, onClose, onSuccess })
                             min="0"
                             value={coins[key]}
                             onChange={(e) => handleCoinChange(key, e.target.value)}
-                            className="w-12 h-7 text-center text-sm font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
+                            className="w-11 h-6 text-center text-xs font-bold border-2 border-[#1A1A1A] rounded bg-white focus:outline-none focus:bg-[#FDFBF7]"
                             data-testid={`bill-${key}`}
                           />
                           <button
                             type="button"
                             onClick={() => handleCoinChange(key, coins[key] - 1)}
-                            className="w-12 h-7 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-sm hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
+                            className="w-11 h-6 bg-[#FFD3B6] border-2 border-[#1A1A1A] rounded text-[#1A1A1A] font-black text-xs hover:bg-[#FFC299] active:shadow-none shadow-[1px_1px_0px_#1A1A1A]"
                           >
                             −
                           </button>
