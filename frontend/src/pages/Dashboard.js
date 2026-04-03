@@ -179,7 +179,7 @@ const Dashboard = () => {
                         e.stopPropagation();
                         setPiggyBankToDelete(piggyBank);
                       }}
-                      className="absolute top-4 right-4 p-2 bg-[#FF9B9B] border-2 border-[#1A1A1A] rounded-lg hover:bg-[#FF7F7F] transition-colors shadow-[2px_2px_0px_#1A1A1A] hover:shadow-[3px_3px_0px_#1A1A1A]"
+                      className="absolute top-4 left-4 p-2 bg-[#FF9B9B] border-2 border-[#1A1A1A] rounded-lg hover:bg-[#FF7F7F] transition-colors shadow-[2px_2px_0px_#1A1A1A] hover:shadow-[3px_3px_0px_#1A1A1A]"
                       data-testid={`delete-piggy-bank-${piggyBank.id}`}
                       title="Eliminar hucha"
                     >
@@ -191,7 +191,7 @@ const Dashboard = () => {
                       onClick={() => navigate(`/piggy-bank/${piggyBank.id}`)}
                     >
                       <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1 pr-8">
+                        <div className="flex-1 pl-10 pr-2">
                           <h4 className="text-xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-1">
                             {piggyBank.name}
                           </h4>
