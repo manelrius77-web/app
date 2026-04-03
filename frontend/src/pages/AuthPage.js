@@ -21,7 +21,7 @@ const AuthPage = () => {
     if (isLogin) {
       const result = await login(email, password);
       if (result.success) {
-        navigate('/dashboard');
+        navigate('/mis-huchas');
       } else {
         setError(result.error);
       }
@@ -33,7 +33,7 @@ const AuthPage = () => {
       }
       const result = await register(email, password, name);
       if (result.success) {
-        navigate('/dashboard');
+        navigate('/mis-huchas');
       } else {
         setError(result.error);
       }

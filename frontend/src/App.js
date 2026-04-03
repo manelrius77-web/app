@@ -17,7 +17,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<AuthPage />} />
             <Route
-              path="/dashboard"
+              path="/mis-huchas"
               element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -40,7 +40,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/mis-huchas" replace />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" />

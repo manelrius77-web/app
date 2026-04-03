@@ -63,12 +63,12 @@ const Statistics = () => {
       <header className="bg-[#FDFBF7] border-b-4 border-[#1A1A1A] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/mis-huchas')}
             className="neo-button flex items-center space-x-2"
             data-testid="back-to-dashboard-button"
           >
             <ArrowLeft size={20} weight="bold" />
-            <span>Volver al Dashboard</span>
+            <span>Volver</span>
           </button>
         </div>
       </header>

@@ -88,7 +88,7 @@ const PiggyBankDetail = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/mis-huchas')}
               className="neo-button flex items-center space-x-2"
               data-testid="back-button"
             >
@@ -148,10 +148,10 @@ const PiggyBankDetail = () => {
             </div>
           )}
 
-          <div className="flex space-x-3">
+          <div className="grid grid-cols-1 gap-3">
             <button
               onClick={() => setShowAddDialog(true)}
-              className="neo-button flex items-center space-x-2 flex-1"
+              className="neo-button flex items-center justify-center space-x-2"
               data-testid="add-money-button"
             >
               <Plus size={20} weight="bold" />
@@ -159,7 +159,7 @@ const PiggyBankDetail = () => {
             </button>
             <button
               onClick={() => setShowWithdrawDialog(true)}
-              className="neo-button neo-button-secondary flex items-center space-x-2 flex-1"
+              className="neo-button neo-button-secondary flex items-center justify-center space-x-2"
               data-testid="withdraw-money-button"
               disabled={piggyBank.balance === 0}
             >
