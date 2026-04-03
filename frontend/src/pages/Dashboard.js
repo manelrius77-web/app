@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [piggyBanks, setPiggyBanks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [piggyBankToDelete, setPiggyBankToDelete] = useState(null);
 
   const fetchPiggyBanks = async () => {
     try {
@@ -51,6 +52,20 @@ const Dashboard = () => {
   const handleLogout = async () => {
     await logout();
     navigate('/login');
+  };
+
+  const handleDeletePiggyBank = async () => {
+    if (!piggyBankToDelete) return;
+    
+    try {
+      await axios.delete(`${API}/piggy-banks/${piggyBankToDelete.id}`, { withCredentials: true });
+      toast.success('Hucha eliminada correctamente');
+      setPiggyBankToDelete(null);
+      fetchPiggyBanks();
+    } catch (error) {
+      console.error('Error deleting piggy bank:', error);
+      toast.error('Error al eliminar la hucha');
+    }
   };
 
   const totalSavings = piggyBanks.reduce((sum, pb) => sum + pb.balance, 0);
@@ -155,39 +170,56 @@ const Dashboard = () => {
                 return (
                   <div
                     key={piggyBank.id}
-                    className={`neo-card ${colorClasses[piggyBank.color]} p-6 cursor-pointer`}
-                    onClick={() => navigate(`/piggy-bank/${piggyBank.id}`)}
+                    className={`neo-card ${colorClasses[piggyBank.color]} p-6 relative`}
                     data-testid={`piggy-bank-card-${piggyBank.id}`}
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <h4 className="text-xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-1">
-                          {piggyBank.name}
-                        </h4>
-                        <p className="text-3xl font-black text-[#1A1A1A]" data-testid={`balance-${piggyBank.id}`}>
-                          €{piggyBank.balance.toFixed(2)}
-                        </p>
-                      </div>
-                      <IconComponent size={40} weight="duotone" className="text-[#1A1A1A]" />
-                    </div>
+                    {/* Delete button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPiggyBankToDelete(piggyBank);
+                      }}
+                      className="absolute top-4 right-4 p-2 bg-[#FF9B9B] border-2 border-[#1A1A1A] rounded-lg hover:bg-[#FF7F7F] transition-colors shadow-[2px_2px_0px_#1A1A1A] hover:shadow-[3px_3px_0px_#1A1A1A]"
+                      data-testid={`delete-piggy-bank-${piggyBank.id}`}
+                      title="Eliminar hucha"
+                    >
+                      <Trash size={16} weight="bold" className="text-[#1A1A1A]" />
+                    </button>
 
-                    {piggyBank.goal && (
-                      <div className="mt-4">
-                        <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-1">
-                          <span>Meta</span>
-                          <span>€{piggyBank.goal.toFixed(2)}</span>
+                    <div 
+                      className="cursor-pointer"
+                      onClick={() => navigate(`/piggy-bank/${piggyBank.id}`)}
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1 pr-8">
+                          <h4 className="text-xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-1">
+                            {piggyBank.name}
+                          </h4>
+                          <p className="text-3xl font-black text-[#1A1A1A]" data-testid={`balance-${piggyBank.id}`}>
+                            €{piggyBank.balance.toFixed(2)}
+                          </p>
                         </div>
-                        <div className="w-full bg-white border-2 border-[#1A1A1A] rounded-full h-3 overflow-hidden">
-                          <div
-                            className="h-full bg-[#1A1A1A] transition-all"
-                            style={{ width: `${Math.min((piggyBank.balance / piggyBank.goal) * 100, 100)}%` }}
-                          ></div>
-                        </div>
-                        <p className="text-xs font-medium text-[#1A1A1A] mt-1">
-                          {((piggyBank.balance / piggyBank.goal) * 100).toFixed(0)}% completado
-                        </p>
+                        <IconComponent size={40} weight="duotone" className="text-[#1A1A1A]" />
                       </div>
-                    )}
+
+                      {piggyBank.goal && (
+                        <div className="mt-4">
+                          <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-1">
+                            <span>Meta</span>
+                            <span>€{piggyBank.goal.toFixed(2)}</span>
+                          </div>
+                          <div className="w-full bg-white border-2 border-[#1A1A1A] rounded-full h-3 overflow-hidden">
+                            <div
+                              className="h-full bg-[#1A1A1A] transition-all"
+                              style={{ width: `${Math.min((piggyBank.balance / piggyBank.goal) * 100, 100)}%` }}
+                            ></div>
+                          </div>
+                          <p className="text-xs font-medium text-[#1A1A1A] mt-1">
+                            {((piggyBank.balance / piggyBank.goal) * 100).toFixed(0)}% completado
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -205,6 +237,40 @@ const Dashboard = () => {
             fetchPiggyBanks();
           }}
         />
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {piggyBankToDelete && (
+        <div className="fixed inset-0 bg-[#1A1A1A] bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white border-4 border-[#1A1A1A] shadow-[8px_8px_0px_#1A1A1A] rounded-xl p-6 w-full max-w-md">
+            <h3 className="text-2xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-4">
+              ¿Eliminar Hucha?
+            </h3>
+            <p className="text-base font-medium text-[#1A1A1A] mb-2">
+              ¿Estás seguro de que quieres eliminar <span className="font-black">"{piggyBankToDelete.name}"</span>?
+            </p>
+            <p className="text-sm text-[#1A1A1A] mb-6">
+              Se perderá el saldo de <span className="font-bold">€{piggyBankToDelete.balance.toFixed(2)}</span> y todo el historial. Esta acción no se puede deshacer.
+            </p>
+            
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setPiggyBankToDelete(null)}
+                className="neo-button flex-1"
+                data-testid="cancel-delete-button"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeletePiggyBank}
+                className="neo-button neo-button-danger flex-1"
+                data-testid="confirm-delete-button"
+              >
+                Sí, Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
