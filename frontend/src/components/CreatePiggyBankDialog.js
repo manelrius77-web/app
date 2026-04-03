@@ -145,7 +145,7 @@ const CreatePiggyBankDialog = ({ onClose, onSuccess }) => {
                     key={icon.value}
                     type="button"
                     onClick={() => setSelectedIcon(icon.value)}
-                    className={`${colorClass} border-2 ${selectedIcon === icon.value ? 'border-[#1A1A1A] shadow-[3px_3px_0px_#1A1A1A]' : 'border-[#1A1A1A]'} rounded-xl h-12 flex items-center justify-center transition-all hover:shadow-[3px_3px_0px_#1A1A1A]`}
+                    className={`${colorClass} border-2 ${selectedIcon === icon.value ? 'border-[#1A1A1A] shadow-[3px_3px_0px_#1A1A1A]' : 'border-[#1A1A1A] opacity-70'} rounded-xl h-12 flex items-center justify-center transition-all hover:opacity-100 hover:shadow-[2px_2px_0px_#1A1A1A]`}
                     data-testid={`icon-${icon.value}`}
                     title={icon.name}
                   >
