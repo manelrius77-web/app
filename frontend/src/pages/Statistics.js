@@ -182,46 +182,54 @@ const Statistics = () => {
           </>
         )}
 
-        {/* Recent Transactions */}
-        <div className="bg-white border-4 border-[#1A1A1A] shadow-[6px_6px_0px_#1A1A1A] rounded-xl p-6">
-          <h3 className="text-2xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-6">
-            Últimas Transacciones
-          </h3>
+        {/* Separador visual */}
+        <div className="border-t-4 border-[#1A1A1A] my-8"></div>
 
-          {stats.recent_transactions.length === 0 ? (
-            <p className="text-center text-[#1A1A1A] font-medium py-8">No hay transacciones aún</p>
-          ) : (
-            <div className="space-y-3">
-              {stats.recent_transactions.map((tx) => (
-                <div
-                  key={tx.id}
-                  className="flex items-center justify-between p-4 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-xl"
-                  data-testid={`recent-transaction-${tx.id}`}
-                >
-                  <div>
-                    <p className="font-bold text-[#1A1A1A]">
-                      {tx.piggy_bank_name} - {tx.type === 'deposit' ? 'Depósito' : 'Retirada'}
-                    </p>
-                    <p className="text-sm text-[#1A1A1A]">
-                      {new Date(tx.timestamp).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                    {tx.description && <p className="text-sm text-[#1A1A1A] mt-1">{tx.description}</p>}
-                  </div>
-                  <p
-                    className={`text-xl font-black text-[#1A1A1A]`}
+        {/* Recent Transactions */}
+        <div>
+          <h2 className="text-2xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-4">
+            Actividad Reciente
+          </h2>
+          <div className="bg-white border-4 border-[#1A1A1A] shadow-[6px_6px_0px_#1A1A1A] rounded-xl p-6">
+            <h3 className="text-xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-6">
+              Últimas Transacciones
+            </h3>
+
+            {stats.recent_transactions.length === 0 ? (
+              <p className="text-center text-[#1A1A1A] font-medium py-8">No hay transacciones aún</p>
+            ) : (
+              <div className="space-y-3">
+                {stats.recent_transactions.map((tx) => (
+                  <div
+                    key={tx.id}
+                    className="flex items-center justify-between p-4 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-xl"
+                    data-testid={`recent-transaction-${tx.id}`}
                   >
-                    {tx.type === 'deposit' ? '+' : '-'}€{tx.amount.toFixed(2)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
+                    <div>
+                      <p className="font-bold text-[#1A1A1A]">
+                        {tx.piggy_bank_name} - {tx.type === 'deposit' ? 'Depósito' : 'Retirada'}
+                      </p>
+                      <p className="text-sm text-[#1A1A1A]">
+                        {new Date(tx.timestamp).toLocaleDateString('es-ES', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </p>
+                      {tx.description && <p className="text-sm text-[#1A1A1A] mt-1">{tx.description}</p>}
+                    </div>
+                    <p
+                      className={`text-xl font-black text-[#1A1A1A]`}
+                    >
+                      {tx.type === 'deposit' ? '+' : '-'}€{tx.amount.toFixed(2)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>
