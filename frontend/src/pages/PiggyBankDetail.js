@@ -12,6 +12,7 @@ import {
 } from '@phosphor-icons/react';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
+import { getIcon } from '../utils/iconMap';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -81,6 +82,8 @@ const PiggyBankDetail = () => {
     );
   }
 
+  const PiggyIcon = getIcon(piggyBank.icon);
+
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       {/* Header */}
@@ -126,7 +129,7 @@ const PiggyBankDetail = () => {
                 </div>
               </div>
             </div>
-            <PiggyBankIcon size={80} weight="duotone" className="text-[#1A1A1A]" />
+            <PiggyIcon size={80} weight="duotone" className="text-[#1A1A1A]" />
           </div>
 
           {piggyBank.goal && (

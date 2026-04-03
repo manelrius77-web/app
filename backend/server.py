@@ -91,11 +91,13 @@ class UserResponse(BaseModel):
 class PiggyBankCreate(BaseModel):
     name: str
     color: str
+    icon: Optional[str] = "piggy-bank"
     goal: Optional[float] = None
 
 class PiggyBankUpdate(BaseModel):
     name: Optional[str] = None
     color: Optional[str] = None
+    icon: Optional[str] = None
     goal: Optional[float] = None
 
 class PiggyBankResponse(BaseModel):
@@ -104,6 +106,7 @@ class PiggyBankResponse(BaseModel):
     user_id: str
     name: str
     color: str
+    icon: Optional[str] = "piggy-bank"
     balance: float
     goal: Optional[float] = None
     created_at: datetime
@@ -201,6 +204,7 @@ async def create_piggy_bank(input: PiggyBankCreate, current_user: dict = Depends
         "user_id": current_user["id"],
         "name": input.name,
         "color": input.color,
+        "icon": input.icon or "piggy-bank",
         "balance": 0.0,
         "goal": input.goal,
         "created_at": datetime.now(timezone.utc)

@@ -13,6 +13,7 @@ import {
 } from '@phosphor-icons/react';
 import CreatePiggyBankDialog from '../components/CreatePiggyBankDialog';
 import { toast } from 'sonner';
+import { getIcon } from '../utils/iconMap';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -140,53 +141,56 @@ const Dashboard = () => {
               </h3>
               <button
                 onClick={() => setShowCreateDialog(true)}
-                className="neo-button flex items-center space-x-2"
+                className="neo-button flex items-center space-x-2 text-xs py-2 px-4"
                 data-testid="create-piggy-bank-button"
               >
-                <Plus size={20} weight="bold" />
-                <span>Nueva Hucha</span>
+                <Plus size={16} weight="bold" />
+                <span>Nueva</span>
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {piggyBanks.map((piggyBank) => (
-                <div
-                  key={piggyBank.id}
-                  className={`neo-card ${colorClasses[piggyBank.color]} p-6 cursor-pointer`}
-                  onClick={() => navigate(`/piggy-bank/${piggyBank.id}`)}
-                  data-testid={`piggy-bank-card-${piggyBank.id}`}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h4 className="text-xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-1">
-                        {piggyBank.name}
-                      </h4>
-                      <p className="text-3xl font-black text-[#1A1A1A]" data-testid={`balance-${piggyBank.id}`}>
-                        €{piggyBank.balance.toFixed(2)}
-                      </p>
+              {piggyBanks.map((piggyBank) => {
+                const IconComponent = getIcon(piggyBank.icon);
+                return (
+                  <div
+                    key={piggyBank.id}
+                    className={`neo-card ${colorClasses[piggyBank.color]} p-6 cursor-pointer`}
+                    onClick={() => navigate(`/piggy-bank/${piggyBank.id}`)}
+                    data-testid={`piggy-bank-card-${piggyBank.id}`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h4 className="text-xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-1">
+                          {piggyBank.name}
+                        </h4>
+                        <p className="text-3xl font-black text-[#1A1A1A]" data-testid={`balance-${piggyBank.id}`}>
+                          €{piggyBank.balance.toFixed(2)}
+                        </p>
+                      </div>
+                      <IconComponent size={40} weight="duotone" className="text-[#1A1A1A]" />
                     </div>
-                    <PiggyBank size={40} weight="duotone" className="text-[#1A1A1A]" />
-                  </div>
 
-                  {piggyBank.goal && (
-                    <div className="mt-4">
-                      <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-1">
-                        <span>Meta</span>
-                        <span>€{piggyBank.goal.toFixed(2)}</span>
+                    {piggyBank.goal && (
+                      <div className="mt-4">
+                        <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-1">
+                          <span>Meta</span>
+                          <span>€{piggyBank.goal.toFixed(2)}</span>
+                        </div>
+                        <div className="w-full bg-white border-2 border-[#1A1A1A] rounded-full h-3 overflow-hidden">
+                          <div
+                            className="h-full bg-[#1A1A1A] transition-all"
+                            style={{ width: `${Math.min((piggyBank.balance / piggyBank.goal) * 100, 100)}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-xs font-medium text-[#1A1A1A] mt-1">
+                          {((piggyBank.balance / piggyBank.goal) * 100).toFixed(0)}% completado
+                        </p>
                       </div>
-                      <div className="w-full bg-white border-2 border-[#1A1A1A] rounded-full h-3 overflow-hidden">
-                        <div
-                          className="h-full bg-[#1A1A1A] transition-all"
-                          style={{ width: `${Math.min((piggyBank.balance / piggyBank.goal) * 100, 100)}%` }}
-                        ></div>
-                      </div>
-                      <p className="text-xs font-medium text-[#1A1A1A] mt-1">
-                        {((piggyBank.balance / piggyBank.goal) * 100).toFixed(0)}% completado
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </>
         )}

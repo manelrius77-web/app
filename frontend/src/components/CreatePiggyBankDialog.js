@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { PiggyBank } from '@phosphor-icons/react';
+import { 
+  PiggyBank, 
+  Airplane, 
+  House, 
+  Car, 
+  GraduationCap, 
+  Heart, 
+  Gift, 
+  ShoppingCart, 
+  GameController, 
+  Rocket,
+  Hamburger,
+  Confetti
+} from '@phosphor-icons/react';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -14,9 +27,25 @@ const colors = [
   { name: 'Amarillo', value: 'yellow', class: 'bg-[#FFE8A1]' },
 ];
 
+const icons = [
+  { name: 'Hucha', value: 'piggy-bank', Component: PiggyBank },
+  { name: 'Viaje', value: 'airplane', Component: Airplane },
+  { name: 'Casa', value: 'house', Component: House },
+  { name: 'Coche', value: 'car', Component: Car },
+  { name: 'Educación', value: 'graduation', Component: GraduationCap },
+  { name: 'Salud', value: 'heart', Component: Heart },
+  { name: 'Regalo', value: 'gift', Component: Gift },
+  { name: 'Compras', value: 'shopping', Component: ShoppingCart },
+  { name: 'Ocio', value: 'game', Component: GameController },
+  { name: 'Proyectos', value: 'rocket', Component: Rocket },
+  { name: 'Comida', value: 'food', Component: Hamburger },
+  { name: 'Fiesta', value: 'party', Component: Confetti },
+];
+
 const CreatePiggyBankDialog = ({ onClose, onSuccess }) => {
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState('mint');
+  const [selectedIcon, setSelectedIcon] = useState('piggy-bank');
   const [goal, setGoal] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +63,7 @@ const CreatePiggyBankDialog = ({ onClose, onSuccess }) => {
         {
           name: name.trim(),
           color: selectedColor,
+          icon: selectedIcon,
           goal: goal ? parseFloat(goal) : null,
         },
         { withCredentials: true }
@@ -99,6 +129,30 @@ const CreatePiggyBankDialog = ({ onClose, onSuccess }) => {
                   )}
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#1A1A1A] mb-2">
+              Icono
+            </label>
+            <div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto p-2 bg-[#FDFBF7] border-2 border-[#1A1A1A] rounded-xl">
+              {icons.map((icon) => {
+                const IconComponent = icon.Component;
+                const colorClass = colors.find(c => c.value === selectedColor)?.class || 'bg-[#A8E6CF]';
+                return (
+                  <button
+                    key={icon.value}
+                    type="button"
+                    onClick={() => setSelectedIcon(icon.value)}
+                    className={`${colorClass} border-2 ${selectedIcon === icon.value ? 'border-[#1A1A1A] shadow-[3px_3px_0px_#1A1A1A]' : 'border-[#1A1A1A]'} rounded-xl h-12 flex items-center justify-center transition-all hover:shadow-[3px_3px_0px_#1A1A1A]`}
+                    data-testid={`icon-${icon.value}`}
+                    title={icon.name}
+                  >
+                    <IconComponent size={24} weight="duotone" className="text-[#1A1A1A]" />
+                  </button>
+                );
+              })}
             </div>
           </div>
 
