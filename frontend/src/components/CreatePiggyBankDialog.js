@@ -123,11 +123,7 @@ const CreatePiggyBankDialog = ({ onClose, onSuccess }) => {
                   className={`${color.class} border-2 ${selectedColor === color.value ? 'border-[#1A1A1A] shadow-[3px_3px_0px_#1A1A1A]' : 'border-[#1A1A1A]'} rounded-xl h-16 transition-all hover:shadow-[3px_3px_0px_#1A1A1A]`}
                   data-testid={`color-${color.value}`}
                   title={color.name}
-                >
-                  {selectedColor === color.value && (
-                    <PiggyBank size={24} weight="duotone" className="mx-auto text-[#1A1A1A]" />
-                  )}
-                </button>
+                />
               ))}
             </div>
           </div>
