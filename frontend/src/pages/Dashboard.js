@@ -110,19 +110,22 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-2">
-            Hola, {user?.name}!
-          </h2>
-          <div className="flex items-center space-x-3 mt-4">
-            <Coins size={32} weight="duotone" className="text-[#1A1A1A]" />
-            <div>
-              <p className="text-sm font-bold uppercase tracking-wider text-[#1A1A1A]">Total Ahorrado</p>
-              <p className="text-3xl font-black text-[#1A1A1A]" data-testid="total-savings">
-                €{totalSavings.toFixed(2)}
-              </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter text-[#1A1A1A] mb-2">
+              Hola, {user?.name}!
+            </h2>
+            <div className="flex items-center space-x-3 mt-4">
+              <Coins size={32} weight="duotone" className="text-[#1A1A1A]" />
+              <div>
+                <p className="text-sm font-bold uppercase tracking-wider text-[#1A1A1A]">Total Ahorrado</p>
+                <p className="text-3xl font-black text-[#1A1A1A]" data-testid="total-savings">
+                  €{totalSavings.toFixed(2)}
+                </p>
+              </div>
             </div>
           </div>
+          <PiggyBank size={100} weight="duotone" className="text-[#1A1A1A] opacity-20 hidden sm:block" data-testid="main-piggy-icon" />
         </div>
 
         {/* Piggy Banks Grid */}
