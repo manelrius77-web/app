@@ -24,6 +24,7 @@ workflows:
           yarn install
       - name: Build web app
         script: |
+          export CI=false
           cd frontend
           yarn build
       - name: Update dependencies and copy web assets to native project
