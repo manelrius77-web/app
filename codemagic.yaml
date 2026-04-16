@@ -12,8 +12,8 @@ workflows:
       vars:
         XCODE_WORKSPACE: "frontend/ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
-        BUNDLE_ID: "com.mishuchas.app"
-        APP_STORE_APP_ID: 1234567890  # Reemplazar con tu App ID
+        BUNDLE_ID: "com.manelrius.huchas"
+        APP_STORE_APP_ID: 6762413282  # Reemplazar con tu App ID
       node: 20
       xcode: 15.4
       cocoapods: default
