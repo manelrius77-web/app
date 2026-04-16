@@ -15,7 +15,7 @@ workflows:
         BUNDLE_ID: "com.mishuchas.app"
         APP_STORE_APP_ID: 1234567890  # Reemplazar con tu App ID
       node: 20
-      xcode: 15.0
+      xcode: 15.4
       cocoapods: default
     scripts:
       - name: Install dependencies
