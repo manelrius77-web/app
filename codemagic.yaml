@@ -51,13 +51,11 @@ workflows:
             -exportOptionsPlist frontend/ios/App/exportOptions.plist \
             -exportPath "$CM_BUILD_DIR"
     artifacts:
-      - frontend/android/app/build/outputs/**/*.aab
-      - frontend/android/app/build/outputs/**/*.apk
       - $CM_BUILD_DIR/*.ipa
     publishing:
       email:
         recipients:
-          - tu-email@ejemplo.com
+          - manelrius77@icloud.com
         notify:
           success: true
           failure: true
@@ -66,7 +64,4 @@ workflows:
         submit_to_testflight: true
         beta_groups:
           - Internal Testers
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal
-        submit_as_draft: true
+   
