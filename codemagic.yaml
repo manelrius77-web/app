@@ -11,7 +11,7 @@ workflows:
       groups:
         - capacitor_config
       vars:
-        XCODE_WORKSPACE: "Frontal/ios/App/App.xcworkspace"
+        XCODE_WORKSPACE: "frontend/ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         BUNDLE_ID: "com.manelrius.huchas"
         APP_STORE_APP_ID: 6762413282
