@@ -4,7 +4,7 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: Codemagic API
+      app_store_connect: Codemagic API 
     environment:
       groups:
         # Añade tus variables de entorno aquí en Codemagic UI
@@ -20,7 +20,10 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
-          cd Frontal
+          pwd
+          ls -la
+          find . -maxdepth 2 -type d
+          cd ./Frontal
           yarn install
           yarn build
       - name: Build web app
