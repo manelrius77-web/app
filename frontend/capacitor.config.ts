@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.mishuchas.app',
+  appId: 'com.manelrius.huchas',
   appName: 'Mis Huchas',
   webDir: 'build',
   server: {
