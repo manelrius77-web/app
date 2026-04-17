@@ -22,11 +22,13 @@ workflows:
         script: |
           cd Frontal
           yarn install
+          yarn build
       - name: Build web app
         script: |
           export CI=false
           cd Frontal
           yarn build
+          
       - name: Update dependencies and copy web assets to native project
         script: |
           cd Frontal
