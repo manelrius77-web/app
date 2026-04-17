@@ -23,8 +23,8 @@ workflows:
       - name: Debug structure
         script: |
           pwd
-          ls -la
-          ls -la Frontal
+          ls frontend
+          
 
       - name: Install dependencies
         script: |
